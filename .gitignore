@@ -1,11 +1,13 @@
 # virtualenv
 env
 venv
+.env.dev
 
 *.swp
 
 # media folder for dp and covers.
 media/
+
 
 # #static folder for static files.
 static/

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.basemodel import BaseModel
+from utils.aws.s3_config import upload_raw_video
 
 User = get_user_model()
 
@@ -16,3 +17,9 @@ class Video(BaseModel):
     def __str__(self):
         return self.title
 
+    # def save(self, *args, **kwargs):
+    #     try:
+    #         upload_raw_video(self.video.path, "adib-source-bucket")
+    #         super(Video, self).save(*args, **kwargs)
+    #     except Exception as e:
+    #         raise e

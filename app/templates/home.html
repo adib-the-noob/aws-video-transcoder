@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}Home App{% endblock %}
+
+{% block content %}
+    <h2>Home Page</h2>
+    <p>Welcome to the home page of my Django app!</p>
+
+    <!-- File Uploader -->
+    <div class="uploader">
+        <h2>Upload File</h2>
+        <input type="text" id="titleInput" placeholder="Enter title" /><br/>
+        <input type="text" id="descriptionInput" placeholder="Enter description" /><br/>
+        <input type="file" id="videoInput" /><br/>
+        <input type="file" id="thumbnailInput" /><br/>
+        <button id="uploadBtn">Upload</button>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+            <span id="progressText">0%</span>
+        </div>
+        <p id="statusText"></p>
+    </div>
+
+    <!-- CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .uploader {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input[type="text"] {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 10px;
+            position: relative;
+            height: 25px;
+        }
+
+        .progress-bar {
+            background-color: #4CAF50;
+            height: 100%;
+            width: 0;
+            border-radius: 5px;
+            transition: width 0.4s;
+        }
+
+        #progressText {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+
+        #statusText {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            const titleInput = document.getElementById('titleInput').value;
+            const descriptionInput = document.getElementById('descriptionInput').value;
+            const videoInput = document.getElementById('videoInput').files[0];
+            const thumbnailInput = document.getElementById('thumbnailInput').files[0];
+            
+            if (!titleInput || !descriptionInput || !videoInput || !thumbnailInput) {
+                alert('Please fill out all fields and select files to upload.');
+                return;
+            }
+
+            // Creating a FormData object to send the data
+            const formData = new FormData();
+            formData.append('title', titleInput);
+            formData.append('description', descriptionInput);
+            formData.append('video', videoInput);
+            formData.append('thumbnail', thumbnailInput);
+
+            const xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener('progress', (e) => {
+                const percent = (e.loaded / e.total) * 100;
+                const progressBar = document.getElementById('progressBar');
+                const progressText = document.getElementById('progressText');
+                
+                progressBar.style.width = percent + '%';
+                progressText.textContent = Math.round(percent) + '%';
+            });
+
+            xhr.addEventListener('load', () => {
+                document.getElementById('statusText').textContent = 'Upload Complete!';
+            });
+
+            xhr.addEventListener('error', () => {
+                document.getElementById('statusText').textContent = 'Upload Failed!';
+            });
+
+            // Sending the request to the API endpoint
+            xhr.open('POST', 'http://127.0.0.1:8000/upload/');
+            xhr.send(formData);
+        });
+    </script>
+{% endblock %}

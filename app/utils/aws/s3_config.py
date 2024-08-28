@@ -28,19 +28,19 @@ def upload_raw_video(
     )
     
     try:
-        uploaded_obj = s3_client.upload_file(
+        _ = s3_client.upload_file(
             Filename=file_name,
-            Bucket=bucket_name,
+            Bucket=f"raw_vide/{bucket_name}/",
             Key=object_name,
             # object_name=object_name,
             Config=config
         )
-        print(f"Uploaded {file_name} to {bucket_name} as {object_name}")
-        return uploaded_obj
+        return {
+            'status': 'success',
+            'file_path': f"https://{bucket_name}.s3.amazonaws.com/{object_name}"
+        } 
 
     except Exception as e:
-        print(f"Failed to upload {file_name} to {bucket_name} as {object_name}")
-        print(e)
         raise e
     
 # x = upload_raw_video("meme.mp4", "adib-source-bucket") # // testing purpos
