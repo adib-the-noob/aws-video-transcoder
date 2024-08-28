@@ -11,15 +11,16 @@ class Video(BaseModel):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    video = models.FileField(upload_to='media/raw_videos/')
-    thumbnail = models.ImageField(upload_to='media/thumbnails/')
+    video = models.FileField()
+    thumbnail = models.ImageField()
 
     def __str__(self):
         return self.title
 
     # def save(self, *args, **kwargs):
     #     try:
-    #         upload_raw_video(self.video.path, "adib-source-bucket")
+    #         x = upload_raw_video(f"{self.video.path}", "adib-source-bucket")
+    #         print(x)
     #         super(Video, self).save(*args, **kwargs)
     #     except Exception as e:
     #         raise e
